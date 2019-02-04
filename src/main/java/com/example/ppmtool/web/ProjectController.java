@@ -52,10 +52,13 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectIdentifier}")
-    public ResponseEntity<?> updateProjectById(@PathVariable String projectIdentifier, @RequestBody Project project) {
+    public ResponseEntity<?> updateProjectById(@PathVariable String projectIdentifier,@Valid @RequestBody Project project, BindingResult result) {
+        ResponseEntity<?> errorMap = validationErrorService.validateRequest(result);
         Project retrieved = projectService.findProjectByIdentifier(projectIdentifier.toUpperCase());
         project.setId(retrieved.getId());
+        project.setProjectIdentifier(retrieved.getProjectIdentifier());
         project.setCreatedAt(retrieved.getCreatedAt());
-        return new ResponseEntity<>(projectService.saveOrUpdateProject(project), HttpStatus.OK);
+        return errorMap == null ? new ResponseEntity<>(projectService.saveOrUpdateProject(project), HttpStatus.OK)
+                : new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
 }
