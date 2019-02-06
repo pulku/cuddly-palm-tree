@@ -24,12 +24,12 @@ public class BacklogController {
     private MapValidationErrorService mapValidationErrorService;
 
     @PostMapping("/{backlogId}/tasks")
-    public ResponseEntity<?> addPTtoBacklog(@Valid @RequestBody ProjectTask projectTask, @PathVariable String backlogId, BindingResult result) {
+    public ResponseEntity<?> addPTtoBacklog(@Valid @RequestBody ProjectTask projectTask, BindingResult result, @PathVariable String backlogId) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.validateRequest(result);
 
         return errorMap == null ? new ResponseEntity<>(projectTaskService.addProjectTask(backlogId, projectTask), HttpStatus.CREATED)
-                : new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+                : errorMap;
 
     }
 
@@ -51,7 +51,7 @@ public class BacklogController {
         ResponseEntity<?> errorMap = mapValidationErrorService.validateRequest(result);
 
         return errorMap == null ? new ResponseEntity<>(projectTaskService.updateProjectTask(projectTask, backlogId, taskSequence), HttpStatus.OK)
-                : new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+                : errorMap;
     }
 
     @DeleteMapping("/{backlogId}/tasks/{taskSequence}")

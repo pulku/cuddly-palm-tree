@@ -5,6 +5,7 @@ import com.example.ppmtool.domain.Project;
 import com.example.ppmtool.domain.ProjectTask;
 import com.example.ppmtool.exceptions.NotFoundException;
 import com.example.ppmtool.repositories.BacklogRepository;
+import com.example.ppmtool.repositories.ProjectRepository;
 import com.example.ppmtool.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class ProjectTaskService {
 
     @Autowired
     private BacklogRepository backlogRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
 
@@ -43,6 +47,11 @@ public class ProjectTaskService {
     }
 
     public Iterable<ProjectTask> findBacklogById(String backlogId) {
+        Project project = projectRepository.findByProjectIdentifier(backlogId);
+
+        if(project==null){
+            throw new NotFoundException("Project with ID: '"+backlogId+"' does not exist");
+        }
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(backlogId);
     }
 
