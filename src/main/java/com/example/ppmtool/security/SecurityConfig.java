@@ -57,13 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/",
                         "/favicon.ico",
-                        "**/*.png",
-                        "**/*.gif",
-                        "**/*.svg",
-                        "**/*.jpg",
-                        "**/*.html",
-                        "**/*.css",
-                        "**/*.js"
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
                 ).permitAll()
                 .antMatchers(SecurityConstants.SIGN_UP_URL).permitAll()
                 .antMatchers(SecurityConstants.H2_URL).permitAll()
